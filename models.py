@@ -32,9 +32,22 @@ class Person(db.Model):
   def __init__(self, name, catchphrase=""):
     self.name = name
     self.catchphrase = catchphrase
-
+      
   def format(self):
     return {
       'id': self.id,
       'name': self.name,
       'catchphrase': self.catchphrase}
+class Flight(db.Model):
+  __tablename__ = 'Flight'
+  id = Column(Integer,primary_key=True)
+  origin = Column(String)
+  destination = Column(String)
+  vehicle = Column(Integer )
+class Vehicle(db.Model):
+  __tablename__ = 'Vehicle'
+  id = Column(Integer,primary_key=True)
+  age = Column(Integer)
+  gender = Column(String)
+
+
