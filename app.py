@@ -8,6 +8,7 @@ def create_app(test_config=None):
     setup_db(app)
     CORS(app)
 
+    db_create_all()
     @app.route('/')
     def get_greeting():
         excited = os.environ['EXCITED']
