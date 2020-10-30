@@ -1,8 +1,8 @@
-from sqlalchemy import Column, String, create_engine
+from sqlalchemy import Column, String,Integer, create_engine
 from flask_sqlalchemy import SQLAlchemy
 import json
-
-database_path = os.environ['DATABASE_URL']
+import os
+database_path = 'postgres://localhost:5432/capstoneDB'
 
 db = SQLAlchemy()
 
