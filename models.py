@@ -23,7 +23,6 @@ Person
 Have title and release year
 '''
 class Person(db.Model):  
-  __tablename__ = 'People'
 
   id = Column(Integer, primary_key=True)
   name = Column(String)
@@ -44,7 +43,6 @@ class Flight(db.Model):
   destination = Column(String)
   vehicle = Column(Integer )
 class Vehicle(db.Model):
-  __tablename__ = 'Vehicle'
   id = Column(Integer,primary_key=True)
   age = Column(Integer)
   gender = Column(String)
