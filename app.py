@@ -2,14 +2,12 @@ import os
 from flask import Flask
 from models import setup_db
 from flask_cors import CORS
-from models import db_create_all
 def create_app(test_config=None):
 
     app = Flask(__name__)
     setup_db(app)
     CORS(app)
 
-    db_create_all()
     @app.route('/')
     def get_greeting():
         excited = os.environ['EXCITED']
