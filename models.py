@@ -16,6 +16,7 @@ def setup_db(app, database_path=database_path):
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
     db.app = app
     db.init_app(app)
+    db.drop_all()
     db.create_all()
 
 '''
@@ -47,6 +48,6 @@ class Vehicle(db.Model):
   model = Column(String)
   reuseable = (Boolean)
   capacity = (Integer)
-  
+
 
 
