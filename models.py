@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String,Integer, create_engine
+from sqlalchemy import Column, String,Integer,Boolean, create_engine
 from flask_sqlalchemy import SQLAlchemy
 import json
 import os
@@ -44,7 +44,9 @@ class Flight(db.Model):
   vehicle = Column(Integer )
 class Vehicle(db.Model):
   id = Column(Integer,primary_key=True)
-  age = Column(Integer)
-  gender = Column(String)
+  model = Column(String)
+  reuseable = (Boolean)
+  capacity = (Integer)
+  
 
 
