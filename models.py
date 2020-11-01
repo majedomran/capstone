@@ -17,6 +17,7 @@ def setup_db(app, database_path=database_path):
     db.app = app
     db.init_app(app)
     db.drop_all()
+    db.create_all()
 
 '''
 Person
