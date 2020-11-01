@@ -16,8 +16,7 @@ def setup_db(app, database_path=database_path):
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
     db.app = app
     db.init_app(app)
-    db.drob_all()
-    db.create_all()
+    db.drop_all()
 
 '''
 Person
