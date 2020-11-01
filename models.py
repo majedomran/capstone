@@ -47,8 +47,8 @@ class Flight(db.Model):
 class Vehicle(db.Model):
   id = Column(Integer,primary_key=True)
   model = Column(String)
-  reuseable = (Boolean)
-  capacity = (Integer)
+  reuseable = Column(Boolean)
+  capacity = Column(Integer)
 
 
 
