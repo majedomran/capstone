@@ -25,46 +25,29 @@ Person
 Have title and release year
 '''
 
-class Person(db.Model):  
-
+class Astronaut(db.Model):  
+  __tablename__ = 'astronaut'
   id = Column(Integer, primary_key=True)
-  name = Column(String)
-  catchphrase = Column(String)
-
-  def __init__(self, name, catchphrase=""):
-    self.name = name
-    self.catchphrase = catchphrase
-      
+  name = db.Column(db.String(),nullable=False)
+  Job = db.Column(db.String(),nullable=False)
+  Flight = db.Column(db.Integer,db.ForeignKey('flight.id'))
+ 
   def format(self):
     return {
       'id': self.id,
       'name': self.name,
-      'catchphrase': self.catchphrase}
+      'Job': self.Job,
+      'Flight': self.Flight
+      }
   def insert(self):
         db.session.add(self)
         db.session.commit()
   def delete(self):
         db.session.delete(self)
         db.session.commit()
-class Flight(db.Model):
-  id = Column(Integer,primary_key=True)
-  origin = Column(String)
-  destination = Column(String)
-  vehicle = Column(Integer )
-  def format(self):
-        return {
-      'id': self.id,
-      'origin': self.origin,
-      'destination': self.destination,
-      'vehicle' : self.vehicle
-      }
-  def insert(self):
-          db.session.add(self)
-          db.session.commit()
-  def delete(self):
-        db.session.delete(self)
-        db.session.commit()
-class Vehicle(db.Model):
+
+class SpaceShip(db.Model):
+  __tablename__ = 'spaceship'
   id = Column(Integer,primary_key=True)
   name = Column(String)
   model = Column(String)
@@ -81,6 +64,44 @@ class Vehicle(db.Model):
   def insert(self):
         db.session.add(self)
         db.session.commit()
+  def delete(self):
+        db.session.delete(self)
+        db.session.commit()
+class Station(db.Model):
+  __tablename__ = 'station'
+  id = db.Column(db.Integer,primary_key=True)
+  CrewCapacity =db.Column(db.Integer,nullable=False)
+  FuelCapacity = db.Column(db.Integer,nullable=False)
+  def format(self):
+        return {
+      'id': self.id,
+      'CrewCapacity': self.CrewCapacity,
+      'FuelCapacity': self.FuelCapacity
+      }
+  def insert(self):
+          db.session.add(self)
+          db.session.commit()
+  def delete(self):
+        db.session.delete(self)
+        db.session.commit()
+class Flight(db.Model):
+  __tablename__ = 'flight'
+  id = db.Column(db.Integer,primary_key=True)
+  SpaceShip =db.Column(db.Integer,db.ForeignKey('spaceship.id'),nullable=False)
+  Station = db.Column(db.Integer,db.ForeignKey('station.id'),nullable=False)
+  LaunchingPad = db.Column(db.String(),nullable=False)
+  LaunchingDate = db.Column(db.String(),nullable=False) 
+  def format(self):
+        return {
+      'id': self.id,
+      'SpaceShip': self.SpaceShip,
+      'Station': self.Station,
+      'LaunchingPad' : self.LaunchingPad,
+      'LaunchingDate' : self.LaunchingPad
+      }
+  def insert(self):
+          db.session.add(self)
+          db.session.commit()
   def delete(self):
         db.session.delete(self)
         db.session.commit()
