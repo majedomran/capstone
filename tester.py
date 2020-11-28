@@ -1,14 +1,16 @@
 import requests 
 import json
 data = json.dumps({'name':'SLS','model':'2020','reuseable':'True','capacity':5})
+header = {'Authorization': 'Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IncyZVdtNWdrMl9nVjBNMVMtZWtFcCJ9.eyJpc3MiOiJodHRwczovL2Rldi04b2JlaGV1ei5ldS5hdXRoMC5jb20vIiwic3ViIjoiYXV0aDB8NWY4YTg1ZGNiYWFhMWMwMDZmNmM0YzM3IiwiYXVkIjoiY2Fwc3RvbmUiLCJpYXQiOjE2MDY1ODMwMzYsImV4cCI6MTYwNjU5MDIzNiwiYXpwIjoiNkE0bmg5MkpLY24yenNMdUtTbTZCRkoyQlFxbFZiSU8iLCJzY29wZSI6IiIsInBlcm1pc3Npb25zIjpbImRlbGV0ZTpvbmUiLCJnZXQ6YWxsIiwiZ2V0Om9uZSIsInBvc3Q6b25lIl19.cRgAFc94ylVX20Hsxt-xdadDrgNZt61pJhsDoP14XvtZGaSF6-vR5lkJ0Xwy2sQYXsDgDwW_EqAjFDM_pmawFYpK7W9DBnfKd-vEEBVBUGxsXEPvCi93RHkONRFBM6Q11FObOFSmC9oL7BDPNdS7P6Yww5dG_TdBKBPgVUBHDqEX6yE7W1dKI8BFoK0a7J2Fz-2NFoKYfkt6UzmSfyWR0XVLrtEMMzWUrvsIuvk38FGuxZxezqLUZzK1YP963Kwbi7nmMWHfdKgL0c0dHML_yeB8mJZwZbHj18nP_1nTEZ4iDMuDjkEc1B-rt6re2AArhfzkNagOIifa1t7men5koQ'}
 data_flight = json.dumps({'spaceship':1,'station':1,'launchingpad':'37A','launchingdate':'2020/11/16'})
 data_Station = json.dumps({'crewcapacity':10,'fuelcapacity':500000})
 data_astronaut = json.dumps({'name':'majed','job':"IT",'flight':1})
-r_Spaceship = requests.post('http://127.0.0.1:5000/Spaceship',data=data)
-r_Station = requests.post('http://127.0.0.1:5000/Station',data=data_Station)
-r_Flight = requests.post('http://127.0.0.1:5000/Flight',data=data_flight) 
-r_Astronaut = requests.post('http://127.0.0.1:5000/Astronaut',data=data_astronaut)
-r_Astronaut_get_one = requests.get('http://127.0.0.1:5000/Astronaut/1')
+r_Spaceship = requests.post('https://heroku-sample-majed.herokuapp.com/Spaceship',data=data,headers=header)
+r_Station = requests.post('https://heroku-sample-majed.herokuapp.com/Station',data=data_Station,headers=header)
+r_Flight = requests.post('https://heroku-sample-majed.herokuapp.com/Flight',data=data_flight,headers=header) 
+r_Astronaut = requests.post('https://heroku-sample-majed.herokuapp.com/Astronaut',data=data_astronaut,headers=header)
+r_Astronaut_get_one = requests.get('https://heroku-sample-majed.herokuapp.com/Astronaut/1',headers=header)
+r_Astronaut_get_one = requests.delete('https://heroku-sample-majed.herokuapp.com/Astronaut/2',headers=header)
 print(r_Astronaut_get_one.status_code)
 print(r_Station.status_code)
 print(r_Spaceship.status_code)

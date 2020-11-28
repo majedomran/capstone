@@ -105,7 +105,6 @@ def create_app(test_config=None):
     @app.route('/Astronaut')
     @requires_auth('get:all')
     def get_Astronaut():
-        print(jwt,'<')
         return paginate_Astronaut()  
     @app.route('/Astronaut/<id>',methods=['GET'])
     @requires_auth('get:one')
