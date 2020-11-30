@@ -2,7 +2,7 @@ from sqlalchemy import Column, String,Integer,Boolean, create_engine
 from flask_sqlalchemy import SQLAlchemy
 import json
 import os
-database_path = 'postgres://jacjbynzzzwfvc:18fa778bcf412fe1f027cebdf64e5bf5c5b831f5ec25b019f72d0f6af99a8e03@ec2-54-156-85-145.compute-1.amazonaws.com:5432/d8tfe8vij6fp4r'
+database_path = os.environ.get('DATABASE_URL')
 
 db = SQLAlchemy()
 
@@ -11,18 +11,19 @@ db = SQLAlchemy()
 setup_db(app)
     binds a flask application and a SQLAlchemy service
 '''
-def setup_db(app, database_path=database_path):
+def setup_db(app,test,database_path=database_path):
     app.config["SQLALCHEMY_DATABASE_URI"] = database_path
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
     db.app = app
     db.init_app(app)
-#     db.session.commit() 
-#     db.drop_all()
+    if test == True:
+      db.session.commit() 
+      db.drop_all()
     db.create_all()
-
+      
 '''
-Person
-Have title and release year
+Astronaut
+is the backbone of the opretions
 '''
 
 class Astronaut(db.Model):  
@@ -46,6 +47,11 @@ class Astronaut(db.Model):
         db.session.delete(self)
         db.session.commit()
 
+'''
+SpaceShip
+the main way of transporting
+'''
+
 class SpaceShip(db.Model):
   __tablename__ = 'spaceship'
   id = Column(Integer,primary_key=True)
@@ -67,6 +73,10 @@ class SpaceShip(db.Model):
   def delete(self):
         db.session.delete(self)
         db.session.commit()
+'''
+Station
+the main station which astronauts get to and from
+'''
 class Station(db.Model):
   __tablename__ = 'station'
   id = db.Column(db.Integer,primary_key=True)
@@ -84,6 +94,10 @@ class Station(db.Model):
   def delete(self):
         db.session.delete(self)
         db.session.commit()
+'''
+Flight
+the connection between all the models
+'''
 class Flight(db.Model):
   __tablename__ = 'flight'
   id = db.Column(db.Integer,primary_key=True)
@@ -97,7 +111,7 @@ class Flight(db.Model):
       'SpaceShip': self.SpaceShip,
       'Station': self.Station,
       'LaunchingPad' : self.LaunchingPad,
-      'LaunchingDate' : self.LaunchingPad
+      'LaunchingDate' : self.LaunchingDate
       }
   def insert(self):
           db.session.add(self)

@@ -1,7 +1,9 @@
 ##### Introduction 
 
 this is the Backend for the international space station or at least an extremely simiplified version of it
- 
+
+- Motivation
+    - since i have already done a DataBase model for this project in college i thought to myself why not do a complete backend for it 
 # the station system has four sections which are as follows:
 
 
@@ -9,8 +11,22 @@ this is the Backend for the international space station or at least an extremely
 2. SpaceShip: the main way to get to the station 
 3. Flight: which has a specific date and SpaceShip and many Astronatus 
 4. Astronaut: they are the backbone of the station and get between earth and space by using SpaceShips
-
+#### Dependencies
+- all dependencies are included in the requiremnets.txt file and you can run them by the command:
+    'pip3 install -r requirements.txt'
+- for runnig the development server:
+    'export FLASK_APP=api.py;'
+    'flask run --reload'
 #### how to use the API
+- Authentication:
+    - is provided by Auth0 
+    - their are two levels of roles:
+        - Captian : which can access everything
+        - Astronaut: which onle can access basic get endpoints
+    - you need a JWT to access the endpoints which all are provided in the setup.sh file and you can export them yo the enviroment by the command 
+    'source setup.sh'
+    -an example for the authentication in a header:
+    header = {'Authorization': 'Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IncyZVdtNWdrMl9nVjBNMVMtZWtFcCJ9.eyJpc3MiOiJodHRwczovL2Rldi04b2JlaGV1ei5ldS5hdXRoMC5jb20vIiwic3ViIjoiYXV0aDB8NWY4YTg1ZGNiYWFhMWMwMDZmNmM0YzM3IiwiYXVkIjoiY2Fwc3RvbmUiLCJpYXQiOjE2MDY2NDY1MzcsImV4cCI6MTYwNjczMjkzNywiYXpwIjoiNkE0bmg5MkpLY24yenNMdUtTbTZCRkoyQlFxbFZiSU8iLCJzY29wZSI6IiIsInBlcm1pc3Npb25zIjpbImRlbGV0ZTpvbmUiLCJnZXQ6YWxsIiwiZ2V0Om9uZSIsInBvc3Q6b25lIl19.StJRmer_TnduFTmZtj7JUwWO4btu0G_ENz28ayKEudbaPzQs_eoPzEUjcRM2tcI2wBo2dtDcirvaUlsQHmOsvNbpCJvRGcJpxs7sR5j0rUsJPSeR5J2v0AgG1PPPPY8Sq2UcGOGbf0X5pqMQaKo6w_VVaABNfQqmlp5wbrkUP1Gj--NE9Y-8UaXgNN0p5SYrqQ7KFK0Kgg27DkYEMFmbAV6q0gPbucAhOyYfm-mUhH-oGAC2ey2Mtr4x1LoJLKpQHdap3VtkgT3ExpAtzfYEwOcI-wGYnyL0c3f78Yo808ACbSY5rcQJBEpsIBDLTfxwlUcAWouADxGuRsSzmOIb6w'}
 
 1. SpaceShip:
     - Attributes:
@@ -33,6 +49,10 @@ this is the Backend for the international space station or at least an extremely
         - delete: deletes a SpaceShip
         only accesable by a Captain
         requests.delete('https://heroku-sample-majed.herokuapp.com/Astronaut/2',headers=header)
+        - patch: edits a SpaceShip 
+        only accessable by a Captian
+        requests.patch('https://heroku-sample-majed.herokuapp.com/Spaceship/1',headers=header)
+
 2. Station:
     - Attributes:
         - id: is the primary key
@@ -49,9 +69,12 @@ this is the Backend for the international space station or at least an extremely
         - get: Gets a specific Station
         only accesable by Captain
         requests.get('https://heroku-sample-majed.herokuapp.com/Station/1',headers=header)
-        -delete: deletes a Station
+        - delete: deletes a Station
         only accesable by a Captain
         requests.delete('https://heroku-sample-majed.herokuapp.com/Station/2',headers=header)
+        - patch: edits a Station 
+        only accessable by a Captian
+        requests.patch('https://heroku-sample-majed.herokuapp.com/Station/1',headers=header)
 3. Flight:
     - Attributes:
         - id: is the primary key
@@ -70,9 +93,12 @@ this is the Backend for the international space station or at least an extremely
         - get: Gets a specific Flight
         only accesable by Captain
         requests.get('https://heroku-sample-majed.herokuapp.com/Flight/1',headers=header)
-        -delete: deletes a Flight
+        - delete: deletes a Flight
         only accesable by a Captain
         requests.delete('https://heroku-sample-majed.herokuapp.com/Flight/2',headers=header)
+        - patch: edits a Flight 
+        only accessable by a Captian
+        requests.patch('https://heroku-sample-majed.herokuapp.com/Astronaut/1',headers=header)
 4. Astronaut:
     - Attributes:
         - id: is the primary key
@@ -90,9 +116,80 @@ this is the Backend for the international space station or at least an extremely
         - get: Gets a specific Astronaut
         only accesable by Captain
         requests.get('https://heroku-sample-majed.herokuapp.com/Astronaut/1',headers=header)
-        -delete: deletes a Astronaut
+        - delete: deletes a Astronaut
         only accesable by a Captain
         requests.delete('https://heroku-sample-majed.herokuapp.com/Astronaut/2',headers=header)
-
+        - patch: edits an Astronaut
+        only accessable by a Captian
+        requests.patch('https://heroku-sample-majed.herokuapp.com/Astronaut/1',headers=header)
+#### expected responses:
+    
+- GET:
+    {
+    "SpaceShips": [
+        {
+            "capacity": 5,
+            "id": 1,
+            "model": "2020",
+            "name": "SLS",
+            "reuseable": true
+        }
+    ],
+    "success": true
+    }
+- GET: get an item
+    {
+    "SpaceShip": {
+        "capacity": 5,
+        "id": 1,
+        "model": "2020",
+        "name": "SLS",
+        "reuseable": true
+    },
+    "success": "True"
+    }
+- POST:
+    "SpaceShips": [
+        {
+            "capacity": 5,
+            "id": 1,
+            "model": "2020",
+            "name": "SLS",
+            "reuseable": true
+        },
+        {
+            "capacity": 2,
+            "id": 2,
+            "model": "1965",
+            "name": "atlas",
+            "reuseable": False
+        }
+    ],
+    "success": true
+    }
+- DELETE:
+    {
+        "Deleted Spaceship": 1,
+        "success": True
+    }
+- PATCH:
+    "SpaceShips": [
+        {
+            "capacity": 5,
+            "id": 1,
+            "model": "2020",
+            "name": "SLS",
+            "reuseable": true
+        },
+        {
+            "capacity": 2,
+            "id": 2,
+            "model": "1965",
+            "name": "atlas",
+            "reuseable": False
+        }
+    ],
+    "success": true
+    }
 
         

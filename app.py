@@ -1,6 +1,6 @@
 import os
 from flask import Flask, jsonify, request, abort, render_template
-from models import Flight, SpaceShip, setup_db, Astronaut, Station
+from models import Flight, SpaceShip, setup_db, Astronaut, Station, db
 from flask_cors import CORS
 import json
 from auth import requires_auth
@@ -9,27 +9,21 @@ from auth import requires_auth
 def create_app(test_config=None):
 
     app = Flask(__name__)
-    setup_db(app)
+    setup_db(app,False)
     CORS(app)
-
+    # a simple HTML description
     @app.route('/')
     def get_instuctions():
-        # excited = os.environ['EXCITED']
-        # greeting = "Hello"
-        # if excited == 'true': greeting = greeting + "!!!!!"
+        
         return render_template('index.html')
-    # Flight
-
-    @app.route('/auth', methods=['POST'])
-    @requires_auth('get:drinks-detail')
-    def req_auth(jwt):
-        return jsonify({"success": True})
-
+# Flight
+    
+    # get all flights
     @app.route('/Flight')
     @requires_auth('get:all')
     def get_flights():
         return paginate_flights()
-
+    # get a specific flight
     @app.route('/Flight/<id>', methods=['GET'])
     @requires_auth('get:one')
     def get_flight_id(id):
@@ -44,7 +38,7 @@ def create_app(test_config=None):
         if error:
             abort(404)
         return jsonify({'success': 'True', 'Flight': flight.format()})
-
+    # add a new flight
     @app.route('/Flight', methods=['POST'])
     @requires_auth('post:one')
     def add_Flight():
@@ -60,7 +54,27 @@ def create_app(test_config=None):
             print('aborted')
             abort(422)
         return paginate_flights()
-
+    # edit a Flight
+    @app.route('/Flight/<id>', methods=['PATCH'])
+    @requires_auth('patch:one')
+    def patch_flight_id(id):
+        try:
+            data = json.loads(request.data)
+            flight = Flight.query.get(id)
+            if 'Station' in data.keys():
+                flight.Station = data['Station']
+            if 'SpaceShip' in data.keys():
+                flight.SpaceShip = data['SpaceShip']
+            if 'LaunchingPad' in data.keys():
+                flight.LaunchingPad = data['LaunchingPad']
+            if 'LaunchingDate' in data.keys():
+                flight.LaunchingDate = data['LaunchingDate']
+            db.session.commit()
+        except:
+            abort(400)
+        finally:
+            return paginate_flights()
+    # delete a flight
     @app.route('/Flight/<id>', methods=['DELETE'])
     @requires_auth('delete:one')
     def delete_flight(id):
@@ -74,12 +88,12 @@ def create_app(test_config=None):
         finally:
             return jsonify({'Deleted flight': id, 'success': True})
     # Vehicle
-
+    # get all SpacShips
     @app.route('/Spaceship')
     @requires_auth('get:all')
     def get_vehicles():
         return paginate_SpaceShip()
-
+    # get a specific SpaceShip
     @app.route('/Spaceship/<id>', methods=['GET'])
     @requires_auth('get:one')
     def get_vehicle_id(id):
@@ -90,7 +104,7 @@ def create_app(test_config=None):
         except BaseException:
             abort(404)
         return jsonify({'success': 'True', 'SpaceShip': Spaceship.format()})
-
+    # add a new SpaceShip
     @app.route('/Spaceship', methods=['POST'])
     @requires_auth('post:one')
     def add_vehicle():
@@ -109,23 +123,43 @@ def create_app(test_config=None):
         except BaseException:
             abort(403)
         return paginate_SpaceShip()
-
+    # edit a Flight
+    @app.route('/Spaceship/<id>', methods=['PATCH'])
+    @requires_auth('patch:one')
+    def patch_Spaceship(id):
+        try:
+            data = json.loads(request.data)
+            Spaceship = SpaceShip.query.get(id)
+            if 'name' in data.keys():
+                Spaceship.name = data['name']
+            if 'model' in data.keys():
+                Spaceship.model = data['model']
+            if 'reuseable' in data.keys():
+                Spaceship.reuseable = data['reuseable']
+            if 'capacity' in data.keys():
+                 Spaceship.capacity = data['capacity']
+            db.session.commit()
+        except:
+            abort(400)
+        finally:
+            return paginate_SpaceShip()
+    # delete a SpaceShip
     @app.route('/Spaceship/<id>', methods=['DELETE'])
     @requires_auth('delete:one')
     def delete_vehicle(id):
-        try:
-            Spaceship = SpaceShip.query.get(id)
-            SpaceShip.delete(Spaceship)
-        except BaseException:
-            abort(404)
+        # try:
+        Spaceship = SpaceShip.query.get(id)
+        SpaceShip.delete(Spaceship)
+        # except BaseException:
+            # abort(404)
         return jsonify({'Deleted Spaceship': id, 'success': True})
     # Astronaut
-
+    # get all Astronauts
     @app.route('/Astronaut')
     @requires_auth('get:all')
     def get_Astronaut():
         return paginate_Astronaut()
-
+    # get a specific Astronaut
     @app.route('/Astronaut/<id>', methods=['GET'])
     @requires_auth('get:one')
     def get_Astronaut_id(id):
@@ -136,7 +170,7 @@ def create_app(test_config=None):
         except BaseException:
             abort(404)
         return jsonify({'success': 'True', 'Astronaut': astronaut.format()})
-
+    # add a new Astronaut
     @app.route('/Astronaut', methods=['POST'])
     @requires_auth('post:one')
     def add_Astronaut():
@@ -151,7 +185,25 @@ def create_app(test_config=None):
         except BaseException:
             abort(403)
         return paginate_Astronaut()
-
+    # edit an Astronaut
+    @app.route('/Astronaut/<id>', methods=['PATCH'])
+    @requires_auth('patch:one')
+    def patch_Astronaut(id):
+        try:
+            data = json.loads(request.data)
+            astronaut = Astronaut.query.get(id)
+            if 'name' in data.keys():
+                astronaut.name = data['name']
+            if 'Job' in data.keys():
+                astronaut.Job = data['Job']
+            if 'Flight' in data.keys():
+                astronaut.Flight = data['Flight']
+            db.session.commit()
+        except:
+            abort(400)
+        finally:
+            return paginate_Astronaut()
+    # delete an Astronaut
     @app.route('/Astronaut/<id>', methods=['DELETE'])
     @requires_auth('delete:one')
     def delete_Astronaut(id):
@@ -161,13 +213,13 @@ def create_app(test_config=None):
         except BaseException:
             abort(404)
         return jsonify({'Deleted Astronaut': id, 'success': True})
-    # station
-
+# station
+    # get all stations
     @app.route('/Station')
     @requires_auth('get:all')
     def get_Station():
         return paginate_Station()
-
+    # get a specific Station
     @app.route('/Station/<id>', methods=['GET'])
     @requires_auth('get:one')
     def get_Station_id(id):
@@ -178,7 +230,7 @@ def create_app(test_config=None):
         except BaseException:
             abort(404)
         return jsonify({'success': 'True', 'station': station.format()})
-
+    # add a new Station
     @app.route('/Station', methods=['POST'])
     @requires_auth('post:one')
     def add_Station():
@@ -192,7 +244,23 @@ def create_app(test_config=None):
         except BaseException:
             abort(403)
         return paginate_Station()
-
+    #  edit a Station
+    @app.route('/Station/<id>', methods=['PATCH'])
+    @requires_auth('patch:one')
+    def patch_Station(id):
+        try:
+            data = json.loads(request.data)
+            station = Station.query.get(id)
+            if 'CrewCapacity' in data.keys():
+                station.CrewCapacity = data['CrewCapacity']
+            if 'FuelCapacity' in data.keys():
+                station.FuelCapacity = data['FuelCapacity']
+            db.session.commit()
+        except:
+            abort(400)
+        finally:
+            return paginate_Astronaut()
+    # delete a Station
     @app.route('/Station/<id>', methods=['DELETE'])
     @requires_auth('delete:one')
     def delete_Stationt(id):
@@ -247,7 +315,22 @@ def create_app(test_config=None):
             "message": "resource not found"
         }), 404
     return app
-
+    @app.errorhandler(403)
+    def not_found(error):
+        error_data = {
+            "success": False,
+            "error": 403,
+            "message": "requested resource is forbidden"
+        }
+        return jsonify(error_data), 403
+    @app.errorhandler(400)
+    def bad_request(error):
+        error_data = {
+            "success": False,
+            "error": 400,
+            "message": "Bad Request"
+        }
+        return jsonify(error_data), 400
 
 app = create_app()
 
